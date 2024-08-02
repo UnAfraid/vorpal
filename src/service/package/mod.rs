@@ -1,6 +1,7 @@
-use crate::api::package_service_server::PackageService;
-use crate::api::{
-    PackageBuildRequest, PackageBuildResponse, PackageBuildSystem, PackagePrepareRequest,
+use vorpal_api::vorpal::common::v0::System;
+use vorpal_api::vorpal::package::v0::package_service_server::PackageService;
+use vorpal_api::vorpal::package::v0::{
+    PackageBuildRequest, PackageBuildResponse, PackagePrepareRequest,
     PackagePrepareResponse,
 };
 use anyhow::Result;
@@ -13,11 +14,11 @@ mod prepare;
 
 #[derive(Debug, Default)]
 pub struct Package {
-    pub system: PackageBuildSystem,
+    pub system: System,
 }
 
 impl Package {
-    pub fn new(system: PackageBuildSystem) -> Self {
+    pub fn new(system: System) -> Self {
         Self { system }
     }
 }

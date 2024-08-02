@@ -1,4 +1,4 @@
-use crate::api::{
+use vorpal_api::vorpal::config::v0::{
     ConfigPackageOutput, ConfigPackageResponse, ConfigPackageSource, ConfigPackageSourceKind,
 };
 use crate::store::{

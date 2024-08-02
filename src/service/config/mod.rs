@@ -1,6 +1,6 @@
-use crate::api::config_service_server::ConfigService;
-use crate::api::ConfigPackageBuildSystem;
-use crate::api::{ConfigPackageOutput, ConfigPackageRequest, ConfigPackageResponse};
+use vorpal_api::vorpal::config::v0::config_service_server::ConfigService;
+use vorpal_api::vorpal::common::v0::System;
+use vorpal_api::vorpal::config::v0::{ConfigPackageOutput, ConfigPackageRequest, ConfigPackageResponse};
 use anyhow::Result;
 use tokio::sync::mpsc;
 use tokio::sync::mpsc::Sender;
@@ -14,7 +14,7 @@ mod stream;
 
 #[derive(Clone, Debug)]
 pub struct ConfigWorker {
-    pub system: ConfigPackageBuildSystem,
+    pub system: System,
     pub uri: String,
 }
 

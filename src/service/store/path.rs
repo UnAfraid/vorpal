@@ -1,4 +1,4 @@
-use crate::api::{StorePath, StorePathKind, StorePathResponse};
+use vorpal_api::vorpal::store::v0::{StorePath, StorePathKind, StorePathResponse};
 use crate::store::paths::{get_package_archive_path, get_source_archive_path};
 use anyhow::Result;
 use tonic::Request;

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package vorpal.common.v0;
+
+enum System {
+    UNKNOWN_SYSTEM = 0;
+    AARCH64_LINUX = 1;
+    AARCH64_MACOS = 2;
+    X86_64_LINUX = 3;
+    X86_64_MACOS = 4;
+}

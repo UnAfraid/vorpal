@@ -1,21 +1,28 @@
-use crate::api::package_service_client::PackageServiceClient;
-use crate::api::store_service_client::StoreServiceClient;
-use crate::api::{
-    ConfigPackageBuild, ConfigPackageBuildSystem, ConfigPackageOutput, ConfigPackageResponse,
-    ConfigPackageSourceKind, PackageBuildRequest, PackagePrepareRequest, PrepareBuildPackage,
-    StorePath, StorePathKind,
-};
-use crate::notary;
-use crate::service::config::source;
-use crate::service::config::{send, send_error, ConfigPackageRequest, ConfigWorker};
-use crate::store::archives::unpack_zstd;
-use crate::store::paths::{get_package_archive_path, get_package_path, get_source_archive_path};
-use anyhow::Result;
 use std::path::Path;
-use tokio::fs::{create_dir_all, read, File};
+
+use anyhow::Result;
+use prost::bytes::Bytes;
+use tokio::fs::{create_dir_all, File, read};
 use tokio::io::AsyncWriteExt;
 use tokio::sync::mpsc::Sender;
 use tonic::{Request, Status};
+use vorpal_api::vorpal::common::v0::System;
+use vorpal_api::vorpal::config::v0::{
+    ConfigPackageBuild, ConfigPackageOutput, ConfigPackageResponse,
+    ConfigPackageSourceKind};
+use vorpal_api::vorpal::package::v0::{
+    PackageBuildRequest, PackagePrepareRequest, PrepareBuildPackage,
+};
+use vorpal_api::vorpal::store::v0::StorePath;
+use vorpal_api::vorpal::package::v0::package_service_client::PackageServiceClient;
+use vorpal_api::vorpal::store::v0::store_service_client::StoreServiceClient;
+use vorpal_api::vorpal::store::v0::StorePathKind;
+
+use crate::notary;
+use crate::service::config::{ConfigPackageRequest, ConfigWorker, send, send_error};
+use crate::service::config::source;
+use crate::store::archives::unpack_zstd;
+use crate::store::paths::{get_package_archive_path, get_package_path, get_source_archive_path};
 
 const DEFAULT_CHUNKS_SIZE: usize = 8192; // default grpc limit
 
@@ -34,7 +41,7 @@ pub async fn prepare(
 
     for chunk in source_data.chunks(DEFAULT_CHUNKS_SIZE) {
         source_chunks.push(PackagePrepareRequest {
-            source_data: chunk.to_vec(),
+            source_data: Bytes::from(chunk.to_vec()),
             source_hash: source_hash.to_string(),
             source_name: name.to_string(),
             source_signature: source_signature.to_string(),
@@ -81,7 +88,7 @@ pub async fn build(
         build_image: build.image.clone(),
         build_packages,
         build_script: build.script.to_string(),
-        build_system: build.system,
+        system: build.system,
         source_hash: source_hash.to_string(),
         source_name: name.to_string(),
     };
@@ -244,10 +251,10 @@ pub async fn package(
         Some(build) => build,
     };
 
-    let config_build_system = ConfigPackageBuildSystem::try_from(config_build.system)
-        .unwrap_or(ConfigPackageBuildSystem::UnknownSystem);
+    let config_build_system = System::try_from(config_build.system)
+        .unwrap_or(System::UnknownSystem);
 
-    if config_build_system == ConfigPackageBuildSystem::UnknownSystem {
+    if config_build_system == System::UnknownSystem {
         send_error(tx, "build config system is unknown".to_string()).await?
     }
 

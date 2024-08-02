@@ -1,5 +1,5 @@
-use crate::api::package_service_server::PackageServiceServer;
-use crate::api::store_service_server::StoreServiceServer;
+use vorpal_api::vorpal::package::v0::package_service_server::PackageServiceServer;
+use vorpal_api::vorpal::store::v0::store_service_server::StoreServiceServer;
 use crate::notary;
 use crate::service::get_build_system;
 use crate::service::package::Package;

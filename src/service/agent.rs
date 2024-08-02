@@ -1,4 +1,4 @@
-use crate::api::config_service_server::ConfigServiceServer;
+use vorpal_api::vorpal::config::v0::config_service_server::ConfigServiceServer;
 use crate::notary;
 use crate::service::config::{Config, ConfigWorker};
 use crate::service::get_build_system;

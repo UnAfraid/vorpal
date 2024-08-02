@@ -1,6 +1,7 @@
-use crate::api::{StoreFetchResponse, StorePath, StorePathKind};
+use vorpal_api::vorpal::store::v0::{StoreFetchResponse, StorePath, StorePathKind};
 use crate::store::paths::{get_package_archive_path, get_source_archive_path};
 use anyhow::Result;
+use prost::bytes::Bytes;
 use tokio::fs::read;
 use tokio::sync::mpsc::Sender;
 use tonic::{Request, Status};
@@ -36,7 +37,7 @@ pub async fn stream(
 
     for package_chunk in data.chunks(package_chunks_size) {
         tx.send(Ok(StoreFetchResponse {
-            data: package_chunk.to_vec(),
+            data: Bytes::from(package_chunk.to_vec()),
         }))
         .await?;
     }

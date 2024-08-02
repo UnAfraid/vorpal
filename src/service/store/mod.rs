@@ -1,5 +1,5 @@
-use crate::api::store_service_server::StoreService;
-use crate::api::{StoreFetchResponse, StorePath, StorePathResponse};
+use vorpal_api::vorpal::store::v0::store_service_server::StoreService;
+use vorpal_api::vorpal::store::v0::{StoreFetchResponse, StorePath, StorePathResponse};
 use anyhow::Result;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;

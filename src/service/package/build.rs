@@ -1,4 +1,5 @@
-use crate::api::{PackageBuildRequest, PackageBuildResponse, PackageBuildSystem};
+use vorpal_api::vorpal::common::v0::System;
+use vorpal_api::vorpal::package::v0::{PackageBuildRequest, PackageBuildResponse};
 use crate::service::get_build_system;
 use crate::store::archives::{compress_zstd, unpack_zstd};
 use crate::store::paths::{
@@ -55,9 +56,9 @@ pub async fn run(
 
     let request = request.into_inner();
 
-    let package_build_system = request.build_system();
+    let package_build_system = request.system();
 
-    if package_build_system == PackageBuildSystem::UnknownSystem {
+    if package_build_system == System::UnknownSystem {
         send_error(tx, "unsupported build system".to_string()).await?
     }
 

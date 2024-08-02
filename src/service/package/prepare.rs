@@ -1,4 +1,4 @@
-use crate::api::{PackagePrepareRequest, PackagePrepareResponse};
+use vorpal_api::vorpal::package::v0::{PackagePrepareRequest, PackagePrepareResponse};
 use crate::notary::get_public_key;
 use crate::store::{
     archives::unpack_zstd,
